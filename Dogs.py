@@ -3,20 +3,20 @@
 from tkinter import *
 from tkinter import messagebox
 import requests
-from PIL import Image, ImageTK
+from PIL import Image, ImageTk
 from io import BytesIO
 
 
 def get_dog_image():
+    """Выводит ссылку на изображение"""
     try:
-        response = requests.get('https://dog.ceo/dog-api/documentation/random')
+        response = requests.get('https://dog.ceo/api/breeds/image/random')
         response.raise_for_status()
         data = response.json()
-        return data('message')
+        return data['message']
     except Exception as e:
         messagebox.showerror('Ошибка', f'Возникла ошибка при запросе API {e}')
         return None
-
 
 
 def show_image():
@@ -26,10 +26,10 @@ def show_image():
         try:
             response = requests.get(image_url, stream=True)
             response.raise_for_status()
-            img.data = BytesIO(response.content)
+            img_data = BytesIO(response.content)
             img = Image.open(img_data)
             img.thumbnail((300, 300))
-            img = ImageTK>PhotoImage(img)
+            img = ImageTk.PhotoImage(img)
             label.config(image=img)
             label.image = img
         except Exception as e:
